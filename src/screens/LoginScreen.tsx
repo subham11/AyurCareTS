@@ -5,8 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Animated,
-  Easing,
   Image,
   Dimensions,
 } from "react-native";
@@ -22,25 +20,9 @@ const LoginScreen: React.FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  // ✅ Animation for flipping effect on button only
-  const rotateAnim = useState(new Animated.Value(0))[0];
-
   const handleLogin = (): void => {
-    Animated.timing(rotateAnim, {
-      toValue: 1,
-      duration: 600,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start(() => {
-      rotateAnim.setValue(0);
-      dispatch<any>(login(username, password));
-    });
+    dispatch<any>(login(username, password));
   };
-
-  const rotateY = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"], // ✅ Full Flip Rotation
-  });
 
   return (
     <View style={styles.container}>
@@ -71,12 +53,10 @@ const LoginScreen: React.FC = () => {
           onChangeText={setPassword}
         />
 
-        {/* ✅ Animated Login Button */}
-        <Animated.View style={{ transform: [{ rotateY }] }}>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginText}>{t("login")}</Text>
-          </TouchableOpacity>
-        </Animated.View>
+        {/* ✅ Normal Login Button (No Animation) */}
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginText}>{t("login")}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -85,21 +65,21 @@ const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FF9933", // ✅ Background color
+    backgroundColor: "#FF9933",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
   },
   topImage: {
-    width: width, // ✅ Responsive width
-    height: width * 0.9, // ✅ Responsive height
-    marginBottom: -2, // ✅ Moves image upwards slightly
+    width: width,
+    height: width * 0.9,
+    marginBottom: -2,
     borderRadius: 12,
   },
   card: {
     width: "100%",
     padding: 20,
-    backgroundColor: "rgba(42, 63, 47, 0.9)", // ✅ 50% Transparency applied
+    backgroundColor: "rgba(42, 63, 47, 0.9)",
     borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
@@ -108,17 +88,17 @@ const styles = StyleSheet.create({
     elevation: 6,
     alignItems: "center",
     position: "relative",
-    top: -40, // ✅ Moves card upwards to overlap image
+    top: -40,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#FF9933", // ✅ Highlighted title
+    color: "#FF9933",
     marginBottom: 20,
   },
   input: {
     width: "100%",
-    backgroundColor: "rgba(255, 255, 255, 0.3)", // ✅ More transparent input fields
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     padding: 14,
     borderRadius: 8,
     marginBottom: 15,
@@ -127,7 +107,7 @@ const styles = StyleSheet.create({
   loginButton: {
     width: "100%",
     padding: 15,
-    backgroundColor: "#FF8C19", // ✅ Maintained orange for contrast
+    backgroundColor: "#FF8C19",
     borderRadius: 8,
     alignItems: "center",
     shadowColor: "#000",

@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
-  Animated,
   FlatList,
   Image,
   TouchableOpacity,
@@ -15,7 +14,7 @@ const { width } = Dimensions.get("window");
 // Define TypeScript type for image items
 interface ImageItem {
   id: string;
-  uri: any; // Changed type to support local images
+  uri: any;
   name: string;
 }
 
@@ -31,20 +30,8 @@ const images: ImageItem[] = [
 ];
 
 const ParallaxCarousel: React.FC = () => {
-  const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<ImageItem>>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Auto-scroll every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let nextIndex = (currentIndex + 1) % images.length;
-      setCurrentIndex(nextIndex);
-      flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [currentIndex]);
 
   // Handle manual navigation (left/right buttons)
   const goToIndex = (index: number) => {
@@ -68,30 +55,19 @@ const ParallaxCarousel: React.FC = () => {
           const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
           setCurrentIndex(newIndex);
         }}
-        renderItem={({ item, index }) => {
-          const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
-          const translateX = scrollX.interpolate({
-            inputRange,
-            outputRange: [-width * 0.3, 0, width * 0.3],
-          });
-
-          return (
-            <View style={styles.imageContainer}>
-              <Animated.Image
-                source={item.uri} // ✅ Using local images
-                style={[styles.image, { transform: [{ translateX }] }]}
-                resizeMode="cover"
-              />
-              {/* Product Name Overlay - Centered */}
-              <View style={styles.textOverlay}>
-                <Text style={styles.productText}>{item.name}</Text>
-              </View>
+        renderItem={({ item }) => (
+          <View style={styles.imageContainer}>
+            <Image
+              source={item.uri} 
+              style={styles.image}
+              resizeMode="cover"
+            />
+            {/* Product Name Overlay - Centered */}
+            <View style={styles.textOverlay}>
+              <Text style={styles.productText}>{item.name}</Text>
             </View>
-          );
-        }}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
-          useNativeDriver: false,
-        })}
+          </View>
+        )}
       />
 
       {/* Pagination Dots */}

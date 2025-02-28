@@ -44,7 +44,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollableText />
+      {/* <ScrollableText /> */}
       <HorizontalScrollList />
       <ParallaxCarousel />
       <Text style={styles.header}>{t('dashboard')}</Text>
